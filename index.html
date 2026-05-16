@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
   </head>
   <body class="bg-slate-50 flex items-center justify-center h-screen">
-    <div
+    <div id="auth-container"
       class="bg-white p-8 rounded-lg shadow-md w-96 relative overflow-hidden"
     >
       <div id="login-form" class="block transition-all duration-300">
@@ -109,6 +109,19 @@
           Already have an account? Login
         </button>
       </div>
+    </div>
+    <div
+      id="dashboard"
+      class="hidden bg-white p-8 rounded-lg shadow-md w-96 text-center"
+    >
+      <h1 class="text-3xl font-bold text-slate-900 mb-2">You made it!</h1>
+      <p class="text-slate-500 mb-6">This is secure data inside your app.</p>
+      <button
+        id="logout-btn"
+        class="text-red-500 font-semibold hover:underline"
+      >
+        Log Out
+      </button>
     </div>
 
     <script src="script.js"></script>
