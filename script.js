@@ -59,3 +59,43 @@ regForm.addEventListener('submit', async (e) => {
         alert('CRITICAL ERROR: Could not connect to the Python server.');
     }
 });
+// --- NEW: LOGIN LOGIC ---
+
+// 1. Grab the login form and inputs
+const loginAuthForm = document.getElementById('login-auth-form');
+const loginEmail = document.getElementById('login-email');
+const loginPassword = document.getElementById('login-password');
+
+// 2. Listen for "Sign In" click
+loginAuthForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const loginData = {
+        email: loginEmail.value,
+        password: loginPassword.value
+    };
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Success! The server recognized the user.
+            alert('SUCCESS: ' + result.message);
+            // In a real app, this is where you would redirect them to a dashboard
+            loginAuthForm.reset();
+        } else {
+            // Failed (wrong password or email doesn't exist)
+            alert('ACCESS DENIED: ' + result.error);
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('CRITICAL ERROR: Could not connect to the Python server.');
+    }
+});

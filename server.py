@@ -62,6 +62,31 @@ def register():
         # This triggers if the UNIQUE rule is broken (email/username already exists)
         return jsonify({"error": "Username or Email already exists"}), 409
 
+# The new Login endpoint
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required"}), 400
+
+    # 1. Connect to the vault
+    conn = sqlite3.connect('users.db')
+    cursor = conn.cursor()
+    
+    # 2. Search for the user by their email
+    cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+    user = cursor.fetchone() # This grabs the first matching row
+    conn.close()
+
+    # 3. Security Check: Does the user exist, AND does the password match the hash?
+    # user[3] is the password_hash column in our database, user[1] is the username
+    if user and check_password_hash(user[3], password):
+        return jsonify({"message": f"Welcome back, {user[1]}!"}), 200
+    else:
+        return jsonify({"error": "Invalid email or password"}), 401
 if __name__ == '__main__':
     print("Starting server on port 5000...")
     app.run(debug=True, port=5000)
